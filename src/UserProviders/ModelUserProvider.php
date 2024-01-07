@@ -8,21 +8,23 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\UserProviders;
 
-use Hyperf\Utils\Contracts\Arrayable;
-use Hyperf\Utils\Str;
+use Hyperf\Database\Model\Builder;
+use Hyperf\Contract\Arrayable;
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
 use HyperfExt\Auth\Contracts\UserProviderInterface;
 use HyperfExt\Hashing\Contract\DriverInterface as HasherInterface;
 use HyperfExt\Hashing\Contract\HashInterface;
+use Hyperf\Stringable\Str;
 
 class ModelUserProvider implements UserProviderInterface
 {
     /**
      * The hasher implementation.
      *
-     * @var \HyperfExt\Hashing\Contract\HashInterface
+     * @var HashInterface
      */
     protected $hasher;
 
@@ -111,9 +113,9 @@ class ModelUserProvider implements UserProviderInterface
      */
     public function retrieveByCredentials(array $credentials): ?AuthenticatableInterface
     {
-        if (empty($credentials) ||
-            (count($credentials) === 1 &&
-                Str::contains($this->firstCredentialKey($credentials), 'password'))) {
+        if (empty($credentials)
+            || (count($credentials) === 1
+                && Str::contains($this->firstCredentialKey($credentials), 'password'))) {
             return null;
         }
 
@@ -214,7 +216,7 @@ class ModelUserProvider implements UserProviderInterface
      * Get a new query builder for the model instance.
      *
      * @param null|\Hyperf\Database\Model\Model|\HyperfExt\Auth\Contracts\AuthenticatableInterface $model
-     * @return \Hyperf\Database\Model\Builder
+     * @return Builder
      */
     protected function newModelQuery($model = null)
     {

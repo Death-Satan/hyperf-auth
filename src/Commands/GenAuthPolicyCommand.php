@@ -8,19 +8,20 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Commands;
 
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Utils\CodeGen\Project;
-use Hyperf\Utils\Str;
+use Hyperf\Stringable\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class GenAuthPolicyCommand extends HyperfCommand
 {
     /**
-     * @var \Hyperf\Contract\ConfigInterface
+     * @var ConfigInterface
      */
     protected $config;
 
@@ -56,7 +57,7 @@ class GenAuthPolicyCommand extends HyperfCommand
 
     protected function createPolicy(string $name, PolicyOption $option)
     {
-        $project = new Project();
+        $project = new \Hyperf\CodeParser\Project();
         $class = Str::studly(Str::singular($name));
         $class = $project->namespace($option->getPath()) . $class;
         $path = BASE_PATH . '/' . $project->path($class);
@@ -92,9 +93,9 @@ class GenAuthPolicyCommand extends HyperfCommand
 
         $namespace = $this->getNamespace($class);
         $namespacedUserModel = $this->getUserProviderModel($option->getGuard());
-        $userModel = class_basename($namespacedUserModel);
+        $userModel = \Hyperf\Support\class_basename($namespacedUserModel);
         $namespacedModel = trim($model, '\\');
-        $model = class_basename($namespacedModel);
+        $model = \Hyperf\Support\class_basename($namespacedModel);
         $modelVariable = Str::camel($model);
         $uses = [
             $namespacedUserModel,

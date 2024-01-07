@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Passwords;
 
 use Carbon\Carbon;
@@ -25,14 +26,14 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     /**
      * The database connection instance.
      *
-     * @var \Hyperf\DbConnection\Connection
+     * @var Connection
      */
     protected $connection;
 
     /**
      * The Hasher implementation.
      *
-     * @var \HyperfExt\Hashing\Contract\DriverInterface
+     * @var HasherInterface
      */
     protected $hasher;
 
@@ -105,9 +106,9 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
             $user->getEmailForPasswordReset()
         )->first();
 
-        return $record &&
-               ! $this->tokenExpired($record['created_at']) &&
-                 $this->hasher->check($token, $record['token']);
+        return $record
+               && ! $this->tokenExpired($record['created_at'])
+                 && $this->hasher->check($token, $record['token']);
     }
 
     /**

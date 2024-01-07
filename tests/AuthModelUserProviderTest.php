@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfTest;
 
 use Hyperf\Database\Model\Model;
@@ -167,6 +168,4 @@ class AuthModelUserProviderTest extends TestCase
     }
 }
 
-class EloquentProviderUserStub
-{
-}
+class EloquentProviderUserStub {}

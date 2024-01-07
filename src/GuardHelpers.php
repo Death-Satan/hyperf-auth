@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth;
 
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
@@ -22,21 +23,21 @@ trait GuardHelpers
     /**
      * The currently authenticated user.
      *
-     * @var \HyperfExt\Auth\Contracts\AuthenticatableInterface
+     * @var AuthenticatableInterface
      */
     protected $user;
 
     /**
      * The user provider implementation.
      *
-     * @var \HyperfExt\Auth\Contracts\UserProviderInterface
+     * @var UserProviderInterface
      */
     protected $provider;
 
     /**
      * Determine if current user is authenticated. If not, throw an exception.
      *
-     * @throws \HyperfExt\Auth\Exceptions\AuthenticationException
+     * @throws AuthenticationException
      */
     public function authenticate(): AuthenticatableInterface
     {

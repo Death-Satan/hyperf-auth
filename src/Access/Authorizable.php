@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Access;
 
 use Hyperf\Utils\ApplicationContext;
@@ -23,7 +24,7 @@ trait Authorizable
      */
     public function can($abilities, $arguments = []): bool
     {
-        return ApplicationContext::getContainer()
+        return \Hyperf\Context\ApplicationContext::getContainer()
             ->get(GateManagerInterface::class)
             ->forUser($this)
             ->check($abilities, $arguments);

@@ -1,5 +1,5 @@
 {
-    "name": "hyperf-ext/auth",
+    "name": "death_satan/hyperf-auth",
     "type": "library",
     "license": "MIT",
     "keywords": [
@@ -16,6 +16,10 @@
         {
             "name": "Taylor Otwell",
             "email": "taylor@laravel.com"
+        },
+        {
+            "name": "DeathSatan",
+            "email": "2771717608@qq.com"
         }
     ],
     "autoload": {
@@ -29,24 +33,24 @@
         }
     },
     "require": {
-        "php": ">=7.3",
-        "ext-swoole": ">=4.5",
-        "hyperf-ext/hashing": "~2.2.0",
-        "hyperf/command": "~2.2.0",
-        "hyperf/config": "~2.2.0",
-        "hyperf/database": "~2.2.0",
-        "hyperf/db-connection": "~2.2.0",
-        "hyperf/di": "~2.2.0",
-        "hyperf/framework": "~2.2.0"
+        "php": ">=8.1",
+        "death_satan/hyperf-hashing": "^3.1",
+        "hyperf/di": "^3.1",
+        "hyperf/framework": "^3.1",
+        "hyperf/db-connection": "^3.1",
+        "hyperf/database": "^3.1",
+        "hyperf/command": "^3.1"
     },
     "require-dev": {
+        "friendsofhyperf/rector": "^0.1.5",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "hyperf/testing": "~2.2.0",
-        "phpstan/phpstan": "^0.12",
-        "swoole/ide-helper": "dev-master",
-        "mockery/mockery": "^1.0"
+        "hyperf/testing": "^3.1",
+        "mockery/mockery": "^1.0",
+        "phpstan/phpstan": "^1.0",
+        "swoole/ide-helper": "dev-master"
     },
     "suggest": {
+        "ext-swoole": ">=5 Required use Hyperf",
         "hyperf/session": "Required to use session guard.",
         "hyperf-ext/cookie": "Required to use session guard.",
         "hyperf-ext/jwt": "Required to use JWT guard."

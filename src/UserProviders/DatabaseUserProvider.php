@@ -8,12 +8,13 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\UserProviders;
 
 use Hyperf\Database\ConnectionInterface;
 use Hyperf\Database\ConnectionResolverInterface;
-use Hyperf\Utils\Contracts\Arrayable;
-use Hyperf\Utils\Str;
+use Hyperf\Contract\Arrayable;
+use Hyperf\Stringable\Str;
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
 use HyperfExt\Auth\Contracts\UserProviderInterface;
 use HyperfExt\Auth\GenericUser;
@@ -25,14 +26,14 @@ class DatabaseUserProvider implements UserProviderInterface
     /**
      * The active database connection.
      *
-     * @var \Hyperf\Database\ConnectionInterface
+     * @var ConnectionInterface
      */
     protected $conn;
 
     /**
      * The hasher implementation.
      *
-     * @var \HyperfExt\Hashing\Contract\HashInterface
+     * @var HashInterface
      */
     protected $hasher;
 
@@ -102,9 +103,9 @@ class DatabaseUserProvider implements UserProviderInterface
      */
     public function retrieveByCredentials(array $credentials): ?AuthenticatableInterface
     {
-        if (empty($credentials) ||
-            (count($credentials) === 1 &&
-                array_key_exists('password', $credentials))) {
+        if (empty($credentials)
+            || (count($credentials) === 1
+                && array_key_exists('password', $credentials))) {
             return null;
         }
 

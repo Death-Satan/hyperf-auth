@@ -8,45 +8,20 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Access;
 
-use Hyperf\Utils\Contracts\Arrayable;
+use Hyperf\Contract\Arrayable;
 use HyperfExt\Auth\Exceptions\AuthorizationException;
 
 class Response implements Arrayable
 {
     /**
-     * Indicates whether the response was allowed.
-     *
-     * @var bool
-     */
-    protected $allowed;
-
-    /**
-     * The response message.
-     *
-     * @var null|string
-     */
-    protected $message;
-
-    /**
-     * The response code.
-     *
-     * @var mixed
-     */
-    protected $code;
-
-    /**
      * Create a new response.
      *
      * @param mixed $code
      */
-    public function __construct(bool $allowed, ?string $message = null, $code = null)
-    {
-        $this->code = $code;
-        $this->allowed = $allowed;
-        $this->message = $message;
-    }
+    public function __construct(protected bool $allowed,protected  ?string $message = null,protected  $code = null){}
 
     /**
      * Get the string representation of the message.
@@ -60,22 +35,20 @@ class Response implements Arrayable
      * Create a new "allow" Response.
      *
      * @param mixed $code
-     * @return \HyperfExt\Auth\Access\Response
      */
     public static function allow(?string $message = null, $code = null): Response
     {
-        return new static(true, $message, $code);
+        return new self(true, $message, $code);
     }
 
     /**
      * Create a new "deny" Response.
      *
      * @param mixed $code
-     * @return \HyperfExt\Auth\Access\Response
      */
     public static function deny(?string $message = null, $code = null): Response
     {
-        return new static(false, $message, $code);
+        return new self(false, $message, $code);
     }
 
     /**
@@ -115,8 +88,8 @@ class Response implements Arrayable
     /**
      * Throw authorization exception if response was denied.
      *
-     *@throws \HyperfExt\Auth\Exceptions\AuthorizationException
      * @return $this
+     * @throws AuthorizationException
      */
     public function authorize(): Response
     {

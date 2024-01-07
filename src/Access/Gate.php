@@ -8,18 +8,15 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Access;
 
-use Exception;
 use Hyperf\Contract\ContainerInterface;
-use Hyperf\Utils\Arr;
-use Hyperf\Utils\Str;
+use Hyperf\Collection\Arr;
+use Hyperf\Stringable\Str;
 use HyperfExt\Auth\Contracts\Access\GateInterface;
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
 use HyperfExt\Auth\Exceptions\AuthorizationException;
-use InvalidArgumentException;
-use ReflectionClass;
-use ReflectionFunction;
 
 class Gate implements GateInterface
 {
@@ -28,7 +25,7 @@ class Gate implements GateInterface
     /**
      * The container instance.
      *
-     * @var \Hyperf\Contract\ContainerInterface
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -125,8 +122,8 @@ class Gate implements GateInterface
      *
      * @param callable|string $callback
      *
-     * @throws \InvalidArgumentException
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function define(string $ability, $callback)
     {
@@ -141,7 +138,7 @@ class Gate implements GateInterface
 
             $this->abilities[$ability] = $this->buildAbilityCallback($ability, $callback);
         } else {
-            throw new InvalidArgumentException("Callback must be a callable or a 'Class@method' string.");
+            throw new \InvalidArgumentException("Callback must be a callable or a 'Class@method' string.");
         }
 
         return $this;
@@ -233,7 +230,7 @@ class Gate implements GateInterface
      */
     public function check($abilities, $arguments = []): bool
     {
-        return collect($abilities)->every(function ($ability) use ($arguments) {
+        return \Hyperf\Collection\collect($abilities)->every(function ($ability) use ($arguments) {
             return $this->inspect($ability, $arguments)->allowed();
         });
     }
@@ -246,7 +243,7 @@ class Gate implements GateInterface
      */
     public function any($abilities, $arguments = []): bool
     {
-        return collect($abilities)->contains(function ($ability) use ($arguments) {
+        return \Hyperf\Collection\collect($abilities)->contains(function ($ability) use ($arguments) {
             return $this->check($ability, $arguments);
         });
     }
@@ -267,8 +264,7 @@ class Gate implements GateInterface
      *
      * @param array|mixed $arguments
      *
-     *@throws \HyperfExt\Auth\Exceptions\AuthorizationException
-     * @return \HyperfExt\Auth\Access\Response
+     * @throws AuthorizationException
      */
     public function authorize(string $ability, $arguments = []): Response
     {
@@ -279,8 +275,6 @@ class Gate implements GateInterface
      * Inspect the user for the given ability.
      *
      * @param array|mixed $arguments
-     *
-     * @return \HyperfExt\Auth\Access\Response
      */
     public function inspect(string $ability, $arguments = []): Response
     {
@@ -302,8 +296,8 @@ class Gate implements GateInterface
      *
      * @param array|mixed $arguments
      *
-     *@throws \HyperfExt\Auth\Exceptions\AuthorizationException
      * @return null|bool|\HyperfExt\Auth\Access\Response
+     * @throws AuthorizationException
      */
     public function raw(string $ability, $arguments = [])
     {
@@ -392,7 +386,7 @@ class Gate implements GateInterface
             return $user;
         };
 
-        return new static(
+        return new self(
             $this->container, $callback, $this->abilities,
             $this->policies, $this->beforeCallbacks, $this->afterCallbacks,
             $this->guessPolicyNamesUsingCallback
@@ -498,10 +492,10 @@ class Gate implements GateInterface
     protected function methodAllowsGuests($class, string $method): bool
     {
         try {
-            $reflection = new ReflectionClass($class);
+            $reflection = new \ReflectionClass($class);
 
             $method = $reflection->getMethod($method);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -521,7 +515,7 @@ class Gate implements GateInterface
      */
     protected function callbackAllowsGuests(callable $callback): bool
     {
-        $parameters = (new ReflectionFunction($callback))->getParameters();
+        $parameters = (new \ReflectionFunction($callback))->getParameters();
 
         return isset($parameters[0]) && $this->parameterAllowsGuests($parameters[0]);
     }
@@ -533,15 +527,15 @@ class Gate implements GateInterface
      */
     protected function parameterAllowsGuests(\ReflectionParameter $parameter): bool
     {
-        return ($parameter->hasType() && $parameter->allowsNull()) ||
-            ($parameter->isDefaultValueAvailable() && is_null($parameter->getDefaultValue()));
+        return ($parameter->hasType() && $parameter->allowsNull())
+            || ($parameter->isDefaultValueAvailable() && is_null($parameter->getDefaultValue()));
     }
 
     /**
      * Resolve and call the appropriate authorization callback.
      *
-     * @throws \ReflectionException
      * @return bool|\HyperfExt\Auth\Access\Response
+     * @throws \ReflectionException
      */
     protected function callAuthCallback(?AuthenticatableInterface $user, string $ability, array $arguments)
     {
@@ -553,8 +547,8 @@ class Gate implements GateInterface
     /**
      * Call all of the before callbacks and return if a result is given.
      *
-     * @throws \ReflectionException
      * @return null|bool|\HyperfExt\Auth\Access\Response
+     * @throws \ReflectionException
      */
     protected function callBeforeCallbacks(?AuthenticatableInterface $user, string $ability, array $arguments)
     {
@@ -575,8 +569,8 @@ class Gate implements GateInterface
      *
      * @param null|bool|\HyperfExt\Auth\Access\Response $result
      *
-     * @throws \ReflectionException
      * @return null|bool|\HyperfExt\Auth\Access\Response
+     * @throws \ReflectionException
      */
     protected function callAfterCallbacks(?AuthenticatableInterface $user, string $ability, array $arguments, $result)
     {
@@ -598,14 +592,14 @@ class Gate implements GateInterface
     /**
      * Resolve the callable for the given ability and arguments.
      *
-     * @throws \ReflectionException
      * @return callable
+     * @throws \ReflectionException
      */
     protected function resolveAuthCallback(?AuthenticatableInterface $user, string $ability, array $arguments)
     {
-        if (isset($arguments[0]) &&
-            ! is_null($policy = $this->getPolicyFor($arguments[0])) &&
-            $callback = $this->resolvePolicyCallback($user, $ability, $arguments, $policy)) {
+        if (isset($arguments[0])
+            && ! is_null($policy = $this->getPolicyFor($arguments[0]))
+            && $callback = $this->resolvePolicyCallback($user, $ability, $arguments, $policy)) {
             return $callback;
         }
 
@@ -617,13 +611,12 @@ class Gate implements GateInterface
             }
         }
 
-        if (isset($this->abilities[$ability]) &&
-            $this->canBeCalledWithUser($user, $this->abilities[$ability])) {
+        if (isset($this->abilities[$ability])
+            && $this->canBeCalledWithUser($user, $this->abilities[$ability])) {
             return $this->abilities[$ability];
         }
 
-        return function () {
-        };
+        return function () {};
     }
 
     /**
@@ -637,7 +630,7 @@ class Gate implements GateInterface
 
         $classDirname = str_replace('/', '\\', dirname(str_replace('\\', '/', $class)));
 
-        return [$classDirname . '\\Policy\\' . class_basename($class) . 'Policy'];
+        return [$classDirname . '\\Policy\\' . \Hyperf\Support\class_basename($class) . 'Policy'];
     }
 
     /**
@@ -682,8 +675,8 @@ class Gate implements GateInterface
      *
      * @param mixed $policy
      *
-     * @throws \ReflectionException
      * @return mixed|void
+     * @throws \ReflectionException
      */
     protected function callPolicyBefore($policy, ?AuthenticatableInterface $user, string $ability, array $arguments)
     {
@@ -701,8 +694,8 @@ class Gate implements GateInterface
      *
      * @param mixed $policy
      *
-     * @throws \ReflectionException
      * @return mixed|void
+     * @throws \ReflectionException
      */
     protected function callPolicyMethod($policy, string $method, ?AuthenticatableInterface $user, array $arguments)
     {

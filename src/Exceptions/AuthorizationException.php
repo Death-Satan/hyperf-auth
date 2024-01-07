@@ -8,18 +8,18 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Exceptions;
 
 use Exception;
 use HyperfExt\Auth\Access\Response;
-use Throwable;
 
-class AuthorizationException extends Exception
+class AuthorizationException extends \Exception
 {
     /**
      * The response from the gate.
      *
-     * @var \HyperfExt\Auth\Access\Response
+     * @var Response
      */
     protected $response;
 
@@ -28,7 +28,7 @@ class AuthorizationException extends Exception
      *
      * @param mixed $code
      */
-    public function __construct(?string $message = null, $code = null, Throwable $previous = null)
+    public function __construct(?string $message = null, $code = null, \Throwable $previous = null)
     {
         parent::__construct($message ?? 'This action is unauthorized.', 0, $previous);
 

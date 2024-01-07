@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfTest;
 
 use Hyperf\Database\ConnectionInterface;
@@ -20,7 +21,6 @@ use HyperfExt\Hashing\Contract\DriverInterface;
 use HyperfExt\Hashing\Contract\HashInterface;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 /**
  * @internal
@@ -77,7 +77,7 @@ class AuthDatabaseUserProviderTest extends TestCase
 
     public function testRetrieveByTokenReturnsUser()
     {
-        $mockUser = new stdClass();
+        $mockUser = new \stdClass();
         $mockUser->remember_token = 'a';
 
         $conn = m::mock(ConnectionInterface::class);
@@ -120,7 +120,7 @@ class AuthDatabaseUserProviderTest extends TestCase
 
     public function testRetrieveByBadTokenReturnsNull()
     {
-        $mockUser = new stdClass();
+        $mockUser = new \stdClass();
         $mockUser->remember_token = null;
 
         $conn = m::mock(ConnectionInterface::class);

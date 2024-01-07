@@ -8,15 +8,14 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth;
 
-use Closure;
 use Hyperf\Contract\ConfigInterface;
 use HyperfExt\Auth\Contracts\AuthManagerInterface;
 use HyperfExt\Auth\Contracts\GuardInterface;
 use HyperfExt\Auth\Contracts\UserProviderInterface;
 use HyperfExt\Auth\Events\AuthManagerResolved;
-use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -27,21 +26,21 @@ class AuthManager implements AuthManagerInterface
     /**
      * The application instance.
      *
-     * @var \Psr\Container\ContainerInterface
+     * @var ContainerInterface
      */
     protected $container;
 
     /**
      * The config instance.
      *
-     * @var \Hyperf\Contract\ConfigInterface
+     * @var ConfigInterface
      */
     protected $config;
 
     /**
      * The event dispatcher instance.
      *
-     * @var \Psr\EventDispatcher\EventDispatcherInterface
+     * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
 
@@ -113,7 +112,7 @@ class AuthManager implements AuthManagerInterface
      *
      * @return $this
      */
-    public function resolveUsersUsing(Closure $userResolver)
+    public function resolveUsersUsing(\Closure $userResolver)
     {
         $this->setContext('userResolver', $userResolver);
 
@@ -132,43 +131,43 @@ class AuthManager implements AuthManagerInterface
         $config = $this->config->get('auth.providers.' . $provider);
 
         if (is_null($config)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 "Authentication user provider [{$provider}] must be defined."
             );
         }
 
         $driverClass = $config['driver'] ?? null;
         if (empty($driverClass)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'Authentication user provider driver must be defined.'
             );
         }
 
-        return make($driverClass, ['options' => $config['options'] ?? []]);
+        return \Hyperf\Support\make($driverClass, ['options' => $config['options'] ?? []]);
     }
 
     /**
      * Resolve the given guard.
      *
-     *@throws \InvalidArgumentException
      * @return \HyperfExt\Auth\Contracts\GuardInterface|\HyperfExt\Auth\Contracts\StatefulGuardInterface
+     * @throws \InvalidArgumentException
      */
     protected function resolve(string $name)
     {
         $config = $this->getConfig($name);
 
         if (empty($config)) {
-            throw new InvalidArgumentException("Auth guard [{$name}] is not defined.");
+            throw new \InvalidArgumentException("Auth guard [{$name}] is not defined.");
         }
 
         if (empty($config['driver'])) {
-            throw new InvalidArgumentException("Auth guard [{$name}] is not defined.");
+            throw new \InvalidArgumentException("Auth guard [{$name}] is not defined.");
         }
 
         $provider = $this->createUserProvider($config['provider'] ?? null);
         $options = $config['options'] ?? [];
 
-        return make($config['driver'], compact('provider', 'name', 'options'));
+        return \Hyperf\Support\make($config['driver'], compact('provider', 'name', 'options'));
     }
 
     protected function getUserResolverClosure()

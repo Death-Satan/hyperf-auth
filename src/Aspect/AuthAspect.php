@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Aspect;
 
 use Hyperf\Di\Annotation\Aspect;
@@ -16,22 +17,19 @@ use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use HyperfExt\Auth\Annotations\Auth;
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
+use HyperfExt\Auth\Contracts\AuthManagerInterface;
 use HyperfExt\Auth\Exceptions\AuthenticationException;
 
-/**
- * @Aspect
- */
+#[Aspect]
 class AuthAspect extends AbstractAspect
 {
-    public $annotations = [
+    public array $annotations = [
         Auth::class,
     ];
 
-    /**
-     * @Inject
-     * @var \HyperfExt\Auth\Contracts\AuthManagerInterface
-     */
-    protected $auth;
+    public function __construct(
+        protected AuthManagerInterface $auth
+    ){}
 
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {

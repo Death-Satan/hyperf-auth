@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfTest;
 
 use Hyperf\Utils\Arr;
@@ -19,7 +20,6 @@ use HyperfExt\Auth\Contracts\UserProviderInterface;
 use HyperfExt\Auth\Passwords\PasswordBroker;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use UnexpectedValueException;
 
 /**
  * @internal
@@ -54,7 +54,7 @@ class AuthPasswordBrokerTest extends TestCase
 
     public function testGetUserThrowsExceptionIfUserDoesntImplementCanResetPassword()
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(\UnexpectedValueException::class);
         $this->expectExceptionMessage('User must implement CanResetPassword interface.');
 
         $broker = $this->getBroker($mocks = $this->getMocks());
@@ -88,19 +88,17 @@ class AuthPasswordBrokerTest extends TestCase
         $broker = $this->getBroker($mocks = $this->getMocks());
         $mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(['creds'])->andReturn(null);
 
-        $this->assertEquals(PasswordBrokerInterface::INVALID_USER, $broker->reset(['creds'], function () {
-        }));
+        $this->assertEquals(PasswordBrokerInterface::INVALID_USER, $broker->reset(['creds'], function () {}));
     }
 
     public function testRedirectReturnedByRemindWhenRecordDoesntExistInTable()
     {
         $creds = ['token' => 'token'];
         $broker = $this->getBroker($mocks = $this->getMocks());
-        $mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(Arr::except($creds, ['token']))->andReturn($user = m::mock(AuthenticatableInterface::class, CanResetPasswordInterface::class));
+        $mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(\Hyperf\Collection\Arr::except($creds, ['token']))->andReturn($user = m::mock(AuthenticatableInterface::class, CanResetPasswordInterface::class));
         $mocks['tokens']->shouldReceive('exists')->with($user, 'token')->andReturn(false);
 
-        $this->assertEquals(PasswordBrokerInterface::INVALID_TOKEN, $broker->reset($creds, function () {
-        }));
+        $this->assertEquals(PasswordBrokerInterface::INVALID_TOKEN, $broker->reset($creds, function () {}));
     }
 
     public function testResetRemovesRecordOnReminderTableAndCallsCallback()

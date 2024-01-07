@@ -8,9 +8,10 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Guards;
 
-use Hyperf\Utils\Str;
+use Hyperf\Stringable\Str;
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
 use HyperfExt\Auth\Contracts\GuardInterface;
 use HyperfExt\Auth\Contracts\UserProviderInterface;
@@ -24,7 +25,7 @@ class TokenGuard implements GuardInterface
     /**
      * The request instance.
      *
-     * @var \Psr\Http\Message\ServerRequestInterface
+     * @var ServerRequestInterface
      */
     protected $request;
 

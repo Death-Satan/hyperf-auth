@@ -1,10 +1,21 @@
 <?php
+/**
+ * This file is part of hyperf-ext/auth.
+ *
+ * @link     https://github.com/hyperf-ext/auth
+ * @contact  eric@zhu.email
+ * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
+ */
+use HyperfExt\Auth\Guards\JwtGuard;
+use HyperfExt\Auth\Guards\SessionGuard;
+use HyperfExt\Auth\Passwords\DatabaseTokenRepository;
+use HyperfExt\Auth\UserProviders\ModelUserProvider;
 
 declare(strict_types=1);
 /**
  * This file is part of hyperf-ext/auth.
  *
- * @link     https://github.com/hyperf-ext/auth
+ * @see     https://github.com/hyperf-ext/auth
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
@@ -42,13 +53,13 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => \HyperfExt\Auth\Guards\SessionGuard::class,
+            'driver' => SessionGuard::class,
             'provider' => 'users',
             'options' => [],
         ],
 
         'api' => [
-            'driver' => \HyperfExt\Auth\Guards\JwtGuard::class,
+            'driver' => JwtGuard::class,
             'provider' => 'users',
             'options' => [],
         ],
@@ -71,9 +82,9 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => \HyperfExt\Auth\UserProviders\ModelUserProvider::class,
+            'driver' => ModelUserProvider::class,
             'options' => [
-                'model' => App\User::class,
+                'model' => App\Model\User::class,
                 'hash_driver' => 'bcrypt',
             ],
         ],
@@ -105,7 +116,7 @@ return [
 
     'passwords' => [
         'users' => [
-            'driver' => \HyperfExt\Auth\Passwords\DatabaseTokenRepository::class,
+            'driver' => DatabaseTokenRepository::class,
             'provider' => 'users',
             'options' => [
                 'connection' => null,
@@ -138,6 +149,6 @@ return [
     */
 
     'policies' => [
-        //Model::class => Policy::class,
+        // Model::class => Policy::class,
     ],
 ];

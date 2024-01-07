@@ -8,29 +8,28 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Passwords;
 
-use Closure;
 use Hyperf\Utils\Arr;
 use HyperfExt\Auth\Contracts\CanResetPasswordInterface;
 use HyperfExt\Auth\Contracts\PasswordBrokerInterface;
 use HyperfExt\Auth\Contracts\TokenRepositoryInterface;
 use HyperfExt\Auth\Contracts\UserProviderInterface;
-use UnexpectedValueException;
 
 class PasswordBroker implements PasswordBrokerInterface
 {
     /**
      * The password token repository.
      *
-     * @var \HyperfExt\Auth\Contracts\TokenRepositoryInterface
+     * @var TokenRepositoryInterface
      */
     protected $tokens;
 
     /**
      * The user provider implementation.
      *
-     * @var \HyperfExt\Auth\Contracts\UserProviderInterface
+     * @var UserProviderInterface
      */
     protected $users;
 
@@ -76,7 +75,7 @@ class PasswordBroker implements PasswordBrokerInterface
      *
      * @return mixed
      */
-    public function reset(array $credentials, Closure $callback)
+    public function reset(array $credentials, \Closure $callback)
     {
         $user = $this->validateReset($credentials);
 
@@ -106,12 +105,12 @@ class PasswordBroker implements PasswordBrokerInterface
      */
     public function getUser(array $credentials): ?CanResetPasswordInterface
     {
-        $credentials = Arr::except($credentials, ['token']);
+        $credentials = \Hyperf\Collection\Arr::except($credentials, ['token']);
 
         $user = $this->users->retrieveByCredentials($credentials);
 
         if ($user && ! $user instanceof CanResetPasswordInterface) {
-            throw new UnexpectedValueException('User must implement CanResetPassword interface.');
+            throw new \UnexpectedValueException('User must implement CanResetPassword interface.');
         }
 
         return $user;

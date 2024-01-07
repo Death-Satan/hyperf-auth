@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfTest;
 
 use Hyperf\Utils\ApplicationContext;
@@ -16,9 +17,7 @@ use HyperfExt\Auth\Access\HandlesAuthorization;
 use HyperfExt\Auth\Access\Response;
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
 use HyperfExt\Auth\Exceptions\AuthorizationException;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 /**
  * @internal
@@ -28,7 +27,7 @@ class AuthAccessGateTest extends TestCase
 {
     public function getContainer()
     {
-        return ApplicationContext::getContainer();
+        return \Hyperf\Context\ApplicationContext::getContainer();
     }
 
     public function testBasicClosuresCanBeDefined()
@@ -48,8 +47,7 @@ class AuthAccessGateTest extends TestCase
 
     public function testBeforeCanTakeAnArrayCallbackAsObject()
     {
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->before([new AccessGateTestBeforeCallback(), 'allowEverything']);
 
@@ -58,8 +56,7 @@ class AuthAccessGateTest extends TestCase
 
     public function testBeforeCanTakeAnArrayCallbackAsObjectStatic()
     {
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->before([new AccessGateTestBeforeCallback(), 'allowEverythingStatically']);
 
@@ -68,8 +65,7 @@ class AuthAccessGateTest extends TestCase
 
     public function testBeforeCanTakeAnArrayCallbackWithStaticMethod()
     {
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->before([AccessGateTestBeforeCallback::class, 'allowEverythingStatically']);
 
@@ -78,8 +74,7 @@ class AuthAccessGateTest extends TestCase
 
     public function testBeforeCanAllowGuests()
     {
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->before(function (?User $user) {
             return true;
@@ -90,8 +85,7 @@ class AuthAccessGateTest extends TestCase
 
     public function testAfterCanAllowGuests()
     {
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->after(function (?User $user) {
             return true;
@@ -102,8 +96,7 @@ class AuthAccessGateTest extends TestCase
 
     public function testClosuresCanAllowGuestUsers()
     {
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->define('foo', function (?User $user) {
             return true;
@@ -121,8 +114,7 @@ class AuthAccessGateTest extends TestCase
     {
         unset($_SERVER['__hyperf.testBefore']);
 
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->policy(AccessGateTestDummy::class, AccessGateTestPolicyThatAllowsGuests::class);
 
@@ -144,8 +136,7 @@ class AuthAccessGateTest extends TestCase
     {
         $_SERVER['__hyperf.testBefore'] = false;
 
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->policy(AccessGateTestDummy::class, AccessGateTestPolicyWithNonGuestBefore::class);
 
@@ -163,8 +154,7 @@ class AuthAccessGateTest extends TestCase
         $_SERVER['__hyperf.gateAfter'] = false;
         $_SERVER['__hyperf.gateAfter2'] = false;
 
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->before(function (?User $user) {
             $_SERVER['__hyperf.gateBefore'] = true;
@@ -248,8 +238,7 @@ class AuthAccessGateTest extends TestCase
         $gate->define('foo', function ($user) {
             return true;
         });
-        $gate->before(function () {
-        });
+        $gate->before(function () {});
 
         $this->assertTrue($gate->check('foo'));
     }
@@ -566,7 +555,7 @@ class AuthAccessGateTest extends TestCase
      */
     public function testDefineSecondParameterShouldBeStringOrCallable($callback)
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $gate = $this->getBasicGate();
 
@@ -580,7 +569,7 @@ class AuthAccessGateTest extends TestCase
     {
         return [
             [1],
-            [new stdClass()],
+            [new \stdClass()],
             [[]],
             [1.1],
         ];
@@ -797,8 +786,7 @@ class AuthAccessGateTest extends TestCase
 
     public function testClassesCanBeDefinedAsCallbacksUsingAtNotationForGuests()
     {
-        $gate = new Gate($this->getContainer(), function () {
-        });
+        $gate = new Gate($this->getContainer(), function () {});
 
         $gate->define('foo', AccessGateTestClassForGuest::class . '@foo');
         $gate->define('obj_foo', [new AccessGateTestClassForGuest(), 'foo']);
@@ -902,7 +890,7 @@ class User implements AuthenticatableInterface
 
 class AccessGateTestClassForGuest
 {
-    public static $calledMethod = null;
+    public static $calledMethod;
 
     public function foo($user = null)
     {
@@ -952,7 +940,7 @@ class AccessGateTestInvokableClass
 
 class AccessGateTestGuestInvokableClass
 {
-    public static $calledMethod = null;
+    public static $calledMethod;
 
     public function __invoke($user = null)
     {
@@ -964,7 +952,7 @@ class AccessGateTestGuestInvokableClass
 
 class AccessGateTestGuestNullableInvokable
 {
-    public static $calledMethod = null;
+    public static $calledMethod;
 
     public function __invoke(?User $user)
     {
@@ -974,17 +962,11 @@ class AccessGateTestGuestNullableInvokable
     }
 }
 
-interface AccessGateTestDummyInterface
-{
-}
+interface AccessGateTestDummyInterface {}
 
-class AccessGateTestDummy implements AccessGateTestDummyInterface
-{
-}
+class AccessGateTestDummy implements AccessGateTestDummyInterface {}
 
-class AccessGateTestSubDummy extends AccessGateTestDummy
-{
-}
+class AccessGateTestSubDummy extends AccessGateTestDummy {}
 
 class AccessGateTestPolicy
 {

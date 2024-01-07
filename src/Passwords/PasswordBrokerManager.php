@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Passwords;
 
 use Hyperf\Contract\ConfigInterface;
@@ -15,7 +16,6 @@ use HyperfExt\Auth\Contracts\AuthManagerInterface;
 use HyperfExt\Auth\Contracts\PasswordBrokerInterface;
 use HyperfExt\Auth\Contracts\PasswordBrokerManagerInterface;
 use HyperfExt\Auth\Contracts\TokenRepositoryInterface;
-use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -28,21 +28,21 @@ class PasswordBrokerManager implements PasswordBrokerManagerInterface
     /**
      * The container instance.
      *
-     * @var \Psr\Container\ContainerInterface
+     * @var ContainerInterface
      */
     protected $container;
 
     /**
      * The config instance.
      *
-     * @var \Hyperf\Contract\ConfigInterface
+     * @var ConfigInterface
      */
     protected $config;
 
     /**
      * The auth manager instance.
      *
-     * @var \HyperfExt\Auth\Contracts\AuthManagerInterface
+     * @var AuthManagerInterface
      */
     protected $auth;
 
@@ -101,7 +101,7 @@ class PasswordBrokerManager implements PasswordBrokerManagerInterface
         $config = $this->getConfig($name);
 
         if (empty($config)) {
-            throw new InvalidArgumentException("Password resetter [{$name}] is not defined.");
+            throw new \InvalidArgumentException("Password resetter [{$name}] is not defined.");
         }
 
         // The password broker uses a token repository to validate tokens and send user
@@ -118,7 +118,7 @@ class PasswordBrokerManager implements PasswordBrokerManagerInterface
      */
     protected function createTokenRepository(array $config): TokenRepositoryInterface
     {
-        return make($config['driver'], ['options' => $config['options']]);
+        return \Hyperf\Support\make($config['driver'], ['options' => $config['options']]);
     }
 
     /**

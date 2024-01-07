@@ -8,11 +8,13 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Access;
 
 use Hyperf\Utils\ApplicationContext;
 use HyperfExt\Auth\Contracts\Access\GateManagerInterface;
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
+use HyperfExt\Auth\Exceptions\AuthorizationException;
 
 trait AuthorizesRequests
 {
@@ -21,14 +23,14 @@ trait AuthorizesRequests
      *
      * @param mixed $ability
      * @param array|mixed $arguments
-     * @throws \HyperfExt\Auth\Exceptions\AuthorizationException
-     * @return \HyperfExt\Auth\Access\Response
+     * @return Response
+     * @throws AuthorizationException
      */
     public function authorize($ability, $arguments = [])
     {
         [$ability, $arguments] = $this->parseAbilityAndArguments($ability, $arguments);
 
-        return ApplicationContext::getContainer()
+        return \Hyperf\Context\ApplicationContext::getContainer()
             ->get(GateManagerInterface::class)
             ->authorize($ability, $arguments);
     }
@@ -38,14 +40,14 @@ trait AuthorizesRequests
      *
      * @param mixed $ability
      * @param array|mixed $arguments
-     * @throws \HyperfExt\Auth\Exceptions\AuthorizationException
-     * @return \HyperfExt\Auth\Access\Response
+     * @return Response
+     * @throws AuthorizationException
      */
     public function authorizeForUser(AuthenticatableInterface $user, $ability, $arguments = [])
     {
         [$ability, $arguments] = $this->parseAbilityAndArguments($ability, $arguments);
 
-        return ApplicationContext::getContainer()
+        return \Hyperf\Context\ApplicationContext::getContainer()
             ->get(GateManagerInterface::class)
             ->forUser($user)
             ->authorize($ability, $arguments);

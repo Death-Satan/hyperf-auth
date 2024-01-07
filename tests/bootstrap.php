@@ -21,4 +21,4 @@ require_once dirname(dirname(__FILE__)) . '/vendor/autoload.php';
 
 $container = new Container((new DefinitionSourceFactory(true))());
 $container->set(ConfigInterface::class, new Config(['autoload' => []]));
-ApplicationContext::setContainer($container);
+\Hyperf\Context\ApplicationContext::setContainer($container);

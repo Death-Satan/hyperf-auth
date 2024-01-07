@@ -1,4 +1,4 @@
-# Hyperf 认证组件
+# Hyperf 认证组件 [此组件 fork hyperf-ext/auth,适配hyperf最新版]
 
 该组件移植了 Laravel Auth 组件（[illuminate/auth](https://github.com/illuminate/auth )）相对完整的功能特性，除了中间件传参和邮件通知。
 

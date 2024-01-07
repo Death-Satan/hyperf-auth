@@ -8,9 +8,8 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
-namespace HyperfExt\Auth\Contracts;
 
-use Closure;
+namespace HyperfExt\Auth\Contracts;
 
 interface PasswordBrokerInterface
 {
@@ -19,35 +18,35 @@ interface PasswordBrokerInterface
      *
      * @var string
      */
-    const RESET_LINK_SENT = 'passwords.sent';
+    public const RESET_LINK_SENT = 'passwords.sent';
 
     /**
      * Constant representing a successfully reset password.
      *
      * @var string
      */
-    const PASSWORD_RESET = 'passwords.reset';
+    public const PASSWORD_RESET = 'passwords.reset';
 
     /**
      * Constant representing the user not found response.
      *
      * @var string
      */
-    const INVALID_USER = 'passwords.user';
+    public const INVALID_USER = 'passwords.user';
 
     /**
      * Constant representing an invalid token.
      *
      * @var string
      */
-    const INVALID_TOKEN = 'passwords.token';
+    public const INVALID_TOKEN = 'passwords.token';
 
     /**
      * Constant representing a throttled reset attempt.
      *
      * @var string
      */
-    const RESET_THROTTLED = 'passwords.throttled';
+    public const RESET_THROTTLED = 'passwords.throttled';
 
     /**
      * Send a password reset link to a user.
@@ -59,5 +58,5 @@ interface PasswordBrokerInterface
      *
      * @return mixed
      */
-    public function reset(array $credentials, Closure $callback);
+    public function reset(array $credentials, \Closure $callback);
 }

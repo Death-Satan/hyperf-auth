@@ -8,10 +8,12 @@ declare(strict_types=1);
  * @contact  eric@zhu.email
  * @license  https://github.com/hyperf-ext/auth/blob/master/LICENSE
  */
+
 namespace HyperfExt\Auth\Contracts\Access;
 
 use HyperfExt\Auth\Access\Response;
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
+use HyperfExt\Auth\Exceptions\AuthorizationException;
 
 interface GateInterface
 {
@@ -102,7 +104,7 @@ interface GateInterface
      *
      * @param array|mixed $arguments
      *
-     * @throws \HyperfExt\Auth\Exceptions\AuthorizationException
+     * @throws AuthorizationException
      */
     public function authorize(string $ability, $arguments = []): Response;
 
@@ -118,8 +120,8 @@ interface GateInterface
      *
      * @param array|mixed $arguments
      *
-     *@throws \HyperfExt\Auth\Exceptions\AuthorizationException
      * @return null|bool|\HyperfExt\Auth\Access\Response
+     * @throws AuthorizationException
      */
     public function raw(string $ability, $arguments = []);
 
@@ -128,8 +130,8 @@ interface GateInterface
      *
      * @param object|string $class
      *
-     * @throws \InvalidArgumentException
      * @return mixed
+     * @throws \InvalidArgumentException
      */
     public function getPolicyFor($class);
 
